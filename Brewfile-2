@@ -1,0 +1,52 @@
+# Anylytical Technologies - shared apps and developer tools
+# ---------------------------------------------------------
+# One list, so every engineer gets the same set. Store this file in GitHub.
+# To add or remove something, edit this file.
+#
+# FIRST-TIME SETUP (once per Mac, about 20 minutes)
+#   EASIEST: run the one-line command at the top of setup-mac.sh, which does steps 2-3 for you.
+#   1. Turn on admin rights in Privileges. Homebrew, Docker and Parallels need them to install.
+#   2. Install Homebrew. Paste this into Terminal and follow the instructions it prints at the end:
+#        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+#   3. While admin rights are still on, install everything in this file:
+#        brew bundle --file=~/path/to/Brewfile
+#   4. Admin rights can now switch off.
+#
+# UPDATING (any time, no admin needed)
+#   brew update && brew bundle --file=~/path/to/Brewfile && brew upgrade
+#   Apps marked "updates itself" also keep themselves up to date.
+#
+# NOT IN THIS FILE (installed by Apple Business instead)
+#   Company Portal, Privileges, Time Doctor, and App Store apps
+#   (Microsoft 365, Teams, Slack, WhatsApp, Telegram).
+#
+# Apps go to each engineer's own Applications folder, so standard accounts can install
+# and update them. The two exceptions are marked below.
+cask_args appdir: "~/Applications"
+
+# --- Command-line tools (update with brew upgrade) ------------------------
+brew "git"              # Newer than the version built into macOS
+brew "kubernetes-cli"   # kubectl
+brew "helm"             # Kubernetes package manager
+brew "node"             # Node.js (current version). For a pinned version, add for example: brew "node@24"
+brew "openjdk@25"       # Java 25 (long-term support)
+#   Java needs one extra step, because Homebrew keeps it separate from the system Java.
+#   With admin rights on, run once:
+#     sudo ln -sfn /opt/homebrew/opt/openjdk@25/libexec/openjdk.jdk /Library/Java/JavaVirtualMachines/openjdk-25.jdk
+
+# --- Developer apps (update themselves) -----------------------------------
+cask "visual-studio-code"   # VS Code
+cask "jetbrains-toolbox"    # Installs and updates IntelliJ IDEA (and other JetBrains tools)
+cask "github"               # GitHub Desktop
+
+# --- Browsers (update themselves) -----------------------------------------
+cask "google-chrome"
+cask "microsoft-edge"
+cask "firefox"
+
+# --- Need admin rights and the main Applications folder -------------------
+cask "docker-desktop", args: { appdir: "/Applications" }   # Docker Desktop (updates itself)
+cask "parallels", args: { appdir: "/Applications" }        # Parallels Desktop (updates itself; licence required)
+
+# --- Optional: remove the # to use instead of JetBrains Toolbox -----------
+# cask "intellij-idea"      # IntelliJ IDEA installed directly (licence required)
