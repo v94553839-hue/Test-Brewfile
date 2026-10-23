@@ -15,12 +15,6 @@ set -euo pipefail
 # >>> Change this to the Raw link of your Brewfile <<<
 BREWFILE_URL="https://raw.githubusercontent.com/v94553839-hue/Test-Brewfile/main/Brewfile"
 
-# Time Doctor (silent app). The company ID links each Mac to the Time Doctor account.
-# Set INSTALL_TIMEDOCTOR=true to install it from this script (fallback if Apple Business fails).
-INSTALL_TIMEDOCTOR=false   # Time Doctor is deployed by Apple Business. Set to true only as a fallback.
-TIMEDOCTOR_VERSION="3.18.74"
-TIMEDOCTOR_COMPANY_ID="6ad49f990177827290117583"
-
 BREWFILE="$HOME/Brewfile"
 BREW="/opt/homebrew/bin/brew"
 JAVA_FORMULA="openjdk@25"
@@ -89,27 +83,7 @@ if [[ "$UPDATE_ONLY" == false ]] && brew list --versions "$JAVA_FORMULA" >/dev/n
   ok "Java is linked"
 fi
 
-# --- 4. Time Doctor (first-time setup only) -----------------------------------
-if [[ "$UPDATE_ONLY" == false && "$INSTALL_TIMEDOCTOR" == true ]]; then
-  if [[ -d /opt/sfproc ]]; then
-    ok "Time Doctor is already installed"
-  else
-    say "Installing Time Doctor (silent app) $TIMEDOCTOR_VERSION"
-    TD_TMP="$(mktemp -t sfproc)"
-    if curl -fsSL -o "$TD_TMP" "https://download.timedoctor.com/${TIMEDOCTOR_VERSION}/macos/silent/sfproc-${TIMEDOCTOR_VERSION}-macos.run"; then
-      if sudo /bin/zsh "$TD_TMP" --nox11 -- --company-id="$TIMEDOCTOR_COMPANY_ID"; then
-        ok "Time Doctor installed"
-      else
-        warn "Time Doctor's installer reported a problem - check with IT"
-      fi
-    else
-      warn "Couldn't download Time Doctor - check the version number at the top of this script"
-    fi
-    rm -f "$TD_TMP"
-  fi
-fi
-
-# --- 5. Check -----------------------------------------------------------------
+# --- 4. Check -----------------------------------------------------------------
 say "Checking everything installed"
 if brew bundle check --file="$BREWFILE"; then
   ok "All done."
@@ -128,3 +102,4 @@ Last steps (a few minutes):
   3. Admin rights can now switch off.
 NEXT
 fi
+
